@@ -3,7 +3,6 @@ import ReactDom from "react-dom";
 import style_classes from "./Modal.module.css";
 
 const Backdrop = (props) => {
-  console.log(props);
   return <div className={style_classes.backdrop} onClick={props.onHide} />;
 };
 
