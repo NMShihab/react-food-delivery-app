@@ -30,7 +30,7 @@ const DUMMY_MEALS = [
   },
 ];
 
-const AvailableMeals = () => {
+const AvailableMeals = (props) => {
   const mealList = DUMMY_MEALS.map((meals) => (
     <MealItem
       id={meals.id}
