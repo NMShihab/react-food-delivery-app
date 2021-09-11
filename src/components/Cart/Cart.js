@@ -8,6 +8,7 @@ import Checkout from "./CheckOut";
 const Cart = (props) => {
   // const cartValue = [{ id: "c1", name: "Sushi", amount: 2, price: 12.99 }];
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const [isOrder, setIsOrder] = useState(false);
   const CartCtx = useContext(CartContext);
   const hasItem = CartCtx.items.length > 0;
@@ -38,6 +39,9 @@ const Cart = (props) => {
     );
 
     setIsSubmiting(false);
+    setDidSubmit(true);
+
+    CartCtx.clearCart();
   };
 
   const cartItems = (
@@ -75,8 +79,8 @@ const Cart = (props) => {
     </div>
   );
 
-  return (
-    <Modal onHide={props.onHideCart}>
+  const cartModalContent = (
+    <React.Fragment>
       {cartItems}
       <div className={style_classes.total}>
         <span>Total Amount</span>
@@ -87,6 +91,26 @@ const Cart = (props) => {
       )}
 
       {!isOrder && modalAction}
+    </React.Fragment>
+  );
+
+  const successMessage = (
+    <React.Fragment>
+      <p>The order is submitted successfully</p>
+      <div className={style_classes.actions}>
+        <button className={style_classes.button} onClick={props.onHideCart}>
+          Close
+        </button>
+      </div>
+    </React.Fragment>
+  );
+  const submitingMessage = <p>Order is submitting.....</p>;
+
+  return (
+    <Modal onHide={props.onHideCart}>
+      {!isSubmiting && !didSubmit && cartModalContent}
+      {isSubmiting && submitingMessage}
+      {didSubmit && successMessage}
     </Modal>
   );
 };
