@@ -7,6 +7,7 @@ import Checkout from "./CheckOut";
 
 const Cart = (props) => {
   // const cartValue = [{ id: "c1", name: "Sushi", amount: 2, price: 12.99 }];
+  const [isSubmiting, setIsSubmiting] = useState(false);
   const [isOrder, setIsOrder] = useState(false);
   const CartCtx = useContext(CartContext);
   const hasItem = CartCtx.items.length > 0;
@@ -21,6 +22,22 @@ const Cart = (props) => {
 
   const cartItemAddHandler = (item) => {
     CartCtx.addItem({ ...item, amount: 1 });
+  };
+
+  const submitOrder = (userData) => {
+    setIsSubmiting(true);
+    fetch(
+      "https://dummy-project-f7186-default-rtdb.asia-southeast1.firebasedatabase.app/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userData,
+          orderItems: CartCtx.items,
+        }),
+      }
+    );
+
+    setIsSubmiting(false);
   };
 
   const cartItems = (
@@ -65,7 +82,9 @@ const Cart = (props) => {
         <span>Total Amount</span>
         <span>{total.toFixed(2)}</span>
       </div>
-      {isOrder && <Checkout onCancel={props.onHideCart} />}
+      {isOrder && (
+        <Checkout onSubmitOrder={submitOrder} onCancel={props.onHideCart} />
+      )}
 
       {!isOrder && modalAction}
     </Modal>
